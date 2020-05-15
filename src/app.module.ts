@@ -5,6 +5,7 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import { RecipesModule } from './recipes/recipes.module';
 import {Recipe} from "./recipes/recipes.entity";
 import { IngredientsModule } from './ingredients/ingredients.module';
+import {Ingredient} from "./ingredients/ingredient.entity";
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { IngredientsModule } from './ingredients/ingredients.module';
       username: 'root',
       password: 'root',
       database: 'recipes_nest',
-      entities: [Recipe],
+      entities: [Recipe, Ingredient],
       synchronize: true,
       autoLoadEntities: true,
     }),

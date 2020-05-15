@@ -11,12 +11,12 @@ export class RecipesService {
         private recipeRepository: Repository<Recipe>,
     ) {}
 
-    create(createRecipeDto: CreateRecipeDto): Promise<Recipe> {
+    async create(createRecipeDto: CreateRecipeDto): Promise<Recipe> {
         const recipe = new Recipe();
         recipe.title = createRecipeDto.title;
         recipe.description = createRecipeDto.description;
 
-        return this.recipeRepository.save(recipe);
+        return await this.recipeRepository.save(recipe);
     }
 
     findAll(): Promise<Recipe[]> {

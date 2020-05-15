@@ -14,11 +14,11 @@ export class IngredientsService {
         private recipeRepository: Repository<Recipe>
     ) {}
 
-    create(createIngredientDto: CreateIngredientDto): Promise<Ingredient> {
+    async create(createIngredientDto: CreateIngredientDto): Promise<Ingredient> {
         const ingredient = new Ingredient();
         ingredient.title = createIngredientDto.title;
-        ingredient.recipe = this.recipeRepository.findOne(createIngredientDto.recipeId)
-            .then(recipe => {return recipe})
+        ingredient.recipe = await this.recipeRepository.findOne(createIngredientDto.recipeId)
+            .then((recipe: Recipe) => {return recipe})
             .catch(error => { console.error(error); return null;});
 
         return this.ingredientRepository.save(ingredient);
