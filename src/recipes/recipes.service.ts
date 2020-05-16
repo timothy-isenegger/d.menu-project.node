@@ -3,6 +3,7 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {Recipe} from "./recipes.entity";
 import {Repository} from "typeorm";
 import {CreateRecipeDto} from "../dto/create-recipe.dto";
+import {RecipeDto} from "../dto/recipe.dto";
 
 @Injectable()
 export class RecipesService {
@@ -15,6 +16,7 @@ export class RecipesService {
         const recipe = new Recipe();
         recipe.title = createRecipeDto.title;
         recipe.description = createRecipeDto.description;
+        recipe.ingredients = createRecipeDto.ingredients;
 
         return await this.recipeRepository.save(recipe);
     }
@@ -25,6 +27,10 @@ export class RecipesService {
 
     findOne(id: string): Promise<Recipe> {
         return this.recipeRepository.findOne(id);
+    }
+
+    async update(id: string, recipeDto: RecipeDto): Promise<Recipe> {
+        return this.recipeRepository.save({... recipeDto, id: Number(id)});
     }
 
     async remove(id: string): Promise<void> {
