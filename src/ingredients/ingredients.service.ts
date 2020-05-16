@@ -32,4 +32,8 @@ export class IngredientsService {
     findOne(id: string): Promise<Ingredient> {
         return this.ingredientRepository.findOne(id);
     }
+
+    async remove(id: string): Promise<void> {
+        await this.ingredientRepository.delete(id);
+    }
 }
