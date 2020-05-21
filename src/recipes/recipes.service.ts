@@ -4,62 +4,52 @@ import {Recipe} from "./recipes.entity";
 import {Repository} from "typeorm";
 import {CreateRecipeDto} from "../dto/create-recipe.dto";
 import {RecipeDto} from "../dto/recipe.dto";
-import {RecipesIngredients} from "./recipes-ingredients.entity";
-import {CreateRecipesIngredientsDto} from "../dto/create-recipes-ingredients.dto";
 import {IngredientsService} from "../ingredients/ingredients.service";
 import {Ingredient} from "../ingredients/ingredient.entity";
+import {CreateIngredientDto} from "../dto/create-ingredient.dto";
 
 @Injectable()
 export class RecipesService {
     constructor(
         @InjectRepository(Recipe)
         private recipeRepository: Repository<Recipe>,
-        @InjectRepository(RecipesIngredients)
-        private recipeIngredientRepository: Repository<RecipesIngredients>,
         @Inject(IngredientsService)
         private ingredientsService: IngredientsService
     ) {
     }
 
     async create(createRecipeDto: CreateRecipeDto): Promise<Recipe> {
-        const recipe = new Recipe();
-        recipe.title = createRecipeDto.title;
-        recipe.description = createRecipeDto.description;
-        recipe.ingredientForRecipe = await this.transformLukasIdee(createRecipeDto.recipesIngredients, recipe);
+        const tempRecipe = new Recipe();
+        tempRecipe.title = createRecipeDto.title;
+        tempRecipe.description = createRecipeDto.description;
+        const savedRecipe = await this.recipeRepository.save(tempRecipe);
+        const savedIngredients = await this.addIngredientsToRecipe(createRecipeDto.ingredients, savedRecipe.id);
 
-        return await this.recipeRepository.save(recipe);
+        return savedRecipe;
     }
 
-    private transformLukasIdee(recipesIngredients: CreateRecipesIngredientsDto[], recipe: Recipe): RecipesIngredients[] {
-        const tempArray: RecipesIngredients[] = [];
-        recipesIngredients.forEach(async item => {
-            const recipesIngredients = new RecipesIngredients();
-            recipesIngredients.recipe = recipe;
-            recipesIngredients.amount = item.amount;
-            recipesIngredients.unit = item.unit;
-            recipesIngredients.ingredient = await this.ingredientsService.findOne(item.ingredientId)
-                .then((ingredient: Ingredient) => {
-                    return ingredient
+    private addIngredientsToRecipe(ingredients: CreateIngredientDto[], recipeId: number): Ingredient[] {
+        const tempArray: Ingredient[] = [];
+        ingredients.forEach(async ingredientDto => {
+            ingredientDto.recipeId = recipeId;
+
+            await this.ingredientsService.create(ingredientDto)
+                .then(savedIngredient => {
+                    tempArray.push(savedIngredient);
                 })
                 .catch(error => {
                     console.error(error);
-                    return null;
                 });
-
-            this.recipeIngredientRepository.save(recipesIngredients)
-                .then(item => {
-                tempArray.push(recipesIngredients);
-            });
         })
         return tempArray;
     }
 
     async findAll(): Promise<Recipe[]> {
-        return await this.recipeRepository.find({ relations: ["ingredientForRecipe"] });
+        return await this.recipeRepository.find({ relations: ["ingredients"] });
     }
 
     async findOne(id: string): Promise<Recipe> {
-        return await this.recipeRepository.findOne(id, { relations: ["ingredientForRecipe"] });
+        return await this.recipeRepository.findOne(id, { relations: ["ingredients"] });
     }
 
     async update(id: string, recipeDto: RecipeDto): Promise<Recipe> {

@@ -1,7 +1,7 @@
-import {CreateRecipesIngredientsDto} from "./create-recipes-ingredients.dto";
+import {CreateIngredientDto} from "./create-ingredient.dto";
 
 export class CreateRecipeDto {
     title: string;
     description: string;
-    recipesIngredients: CreateRecipesIngredientsDto[];
+    ingredients: CreateIngredientDto[];
 }

@@ -6,7 +6,6 @@ import { RecipesModule } from './recipes/recipes.module';
 import {Recipe} from "./recipes/recipes.entity";
 import { IngredientsModule } from './ingredients/ingredients.module';
 import {Ingredient} from "./ingredients/ingredient.entity";
-import {RecipesIngredients} from "./recipes/recipes-ingredients.entity";
 
 @Module({
   imports: [
@@ -17,7 +16,7 @@ import {RecipesIngredients} from "./recipes/recipes-ingredients.entity";
       username: 'root',
       password: 'root',
       database: 'recipes_nest',
-      entities: [Recipe, Ingredient, RecipesIngredients],
+      entities: [Recipe, Ingredient],
       synchronize: true,
       autoLoadEntities: true,
     }),

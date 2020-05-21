@@ -14,6 +14,8 @@ export class IngredientsService {
     async create(createIngredientDto: CreateIngredientDto): Promise<Ingredient> {
         const ingredient = new Ingredient();
         ingredient.title = createIngredientDto.title;
+        ingredient.amount = createIngredientDto.amount;
+        ingredient.recipe = createIngredientDto.recipeId;
 
         return this.ingredientRepository.save(ingredient);
     }
