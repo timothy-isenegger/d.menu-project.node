@@ -10,6 +10,6 @@ export class Ingredient {
     @Column()
     title: string;
 
-    @OneToMany(type => RecipesIngredients, recipesIngredient => recipesIngredient.ingredient)
-    recipe: Recipe;
+    // @OneToMany(type => RecipesIngredients, recipesIngredient => recipesIngredient.ingredient)
+    // recipe: Recipe;
 }

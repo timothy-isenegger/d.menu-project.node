@@ -1,6 +1,6 @@
-import {Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
-import {Recipe} from "./recipes.entity";
+import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {Ingredient} from "../ingredients/ingredient.entity";
+import {Recipe} from "./recipes.entity";
 
 const unit = {
     GRAMM: "gr",
@@ -14,11 +14,11 @@ export class RecipesIngredients {
     @PrimaryGeneratedColumn()
     id: number
 
-    @ManyToOne(type => Recipe, recipe => recipe.ingredients)
-    recipe: Recipe
-
-    @ManyToOne(type => Ingredient, ingredient => ingredient.recipe)
+    @ManyToOne(type => Ingredient, ingredient => ingredient.id)
     ingredient: Ingredient
+
+    @ManyToOne(type => Recipe, recipe => recipe.ingredientForRecipe)
+    recipe: Recipe
 
     @Column()
     amount: number
