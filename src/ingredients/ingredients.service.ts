@@ -20,12 +20,12 @@ export class IngredientsService {
         return this.ingredientRepository.save(ingredient);
     }
 
-    findAll(): Promise<Ingredient[]> {
-        return this.ingredientRepository.find();
+    async findAll(): Promise<Ingredient[]> {
+        return await this.ingredientRepository.find();
     }
 
     async findOne(id: number): Promise<Ingredient> {
-        return this.ingredientRepository.findOne(id);
+        return await this.ingredientRepository.findOne(id);
     }
 
     async remove(id: string): Promise<void> {
