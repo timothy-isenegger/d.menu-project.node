@@ -17,7 +17,7 @@ export class StepService {
         step.instruction = createStepDto.instruction;
         step.recipe = createStepDto.recipeId;
 
-        return this.stepRepository.save(step);
+        return await this.stepRepository.save(step);
     }
 
     async findAll(): Promise<Step[]> {

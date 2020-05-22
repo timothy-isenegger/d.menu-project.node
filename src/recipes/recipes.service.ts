@@ -7,6 +7,9 @@ import {RecipeDto} from "../dto/recipe.dto";
 import {IngredientsService} from "../ingredients/ingredients.service";
 import {Ingredient} from "../ingredients/ingredient.entity";
 import {CreateIngredientDto} from "../dto/create-ingredient.dto";
+import {CreateStepDto} from "../dto/create-step.dto";
+import {Step} from "../step/step.entity";
+import {StepService} from "../step/step.service";
 
 @Injectable()
 export class RecipesService {
@@ -14,7 +17,9 @@ export class RecipesService {
         @InjectRepository(Recipe)
         private recipeRepository: Repository<Recipe>,
         @Inject(IngredientsService)
-        private ingredientsService: IngredientsService
+        private ingredientsService: IngredientsService,
+        @Inject(StepService)
+        private stepService: StepService
     ) {
     }
 
@@ -24,6 +29,7 @@ export class RecipesService {
         tempRecipe.description = createRecipeDto.description;
         const savedRecipe = await this.recipeRepository.save(tempRecipe);
         const savedIngredients = await this.addIngredientsToRecipe(createRecipeDto.ingredients, savedRecipe.id);
+        const savedSteps = await this.addStepsToRecipe(createRecipeDto.steps, savedRecipe.id);
 
         return savedRecipe;
     }
@@ -44,12 +50,29 @@ export class RecipesService {
         return tempArray;
     }
 
+    private addStepsToRecipe(steps: CreateStepDto[], recipeId: number): Step[] {
+        const tempArray: Step[] = [];
+
+        steps.forEach(async stepDto => {
+            stepDto.recipeId = recipeId;
+
+            await this.stepService.create(stepDto)
+                .then(savedStep => {
+                    tempArray.push(savedStep);
+                })
+                .catch(error => {
+                    console.error(error);
+                })
+        })
+        return tempArray;
+    }
+
     async findAll(): Promise<Recipe[]> {
-        return await this.recipeRepository.find({ relations: ["ingredients"] });
+        return await this.recipeRepository.find({ relations: ["ingredients", "steps"] });
     }
 
     async findOne(id: string): Promise<Recipe> {
-        return await this.recipeRepository.findOne(id, { relations: ["ingredients"] });
+        return await this.recipeRepository.findOne(id, { relations: ["ingredients", "steps"] });
     }
 
     async update(id: string, recipeDto: RecipeDto): Promise<Recipe> {
