@@ -28,6 +28,10 @@ export class IngredientsService {
         return await this.ingredientRepository.findOne(id);
     }
 
+    async update(ingredient: Ingredient, id: Number): Promise<Ingredient> {
+        return await this.ingredientRepository.save({...ingredient});
+    }
+
     async remove(id: string): Promise<void> {
         await this.ingredientRepository.delete(id);
     }

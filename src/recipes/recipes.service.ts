@@ -71,12 +71,12 @@ export class RecipesService {
         return await this.recipeRepository.find({ relations: ["ingredients", "steps"] });
     }
 
-    async findOne(id: string): Promise<Recipe> {
+    async findOne(id: number): Promise<Recipe> {
         return await this.recipeRepository.findOne(id, { relations: ["ingredients", "steps"] });
     }
 
-    async update(id: string, recipeDto: RecipeDto): Promise<Recipe> {
-        return this.recipeRepository.save({...recipeDto, id: Number(id)});
+    async update(id: number, recipeDto: RecipeDto): Promise<Recipe> {
+        return await this.recipeRepository.save({...recipeDto, id: id});
     }
 
     async remove(id: string): Promise<void> {
