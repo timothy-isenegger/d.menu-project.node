@@ -10,9 +10,14 @@ import { StepController } from './step/step.controller';
 import { StepService } from './step/step.service';
 import {Step} from "./step/step.entity";
 import { StepModule } from './step/step.module';
+import { ServeStaticModule} from '@nestjs/serve-static'; // New
+import { join } from 'path'; // New
 
 @Module({
   imports: [
+      ServeStaticModule.forRoot({
+        rootPath: join(__dirname, '..', 'client/dist'),
+      }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -29,6 +34,6 @@ import { StepModule } from './step/step.module';
     StepModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService  ],
 })
 export class AppModule {}
