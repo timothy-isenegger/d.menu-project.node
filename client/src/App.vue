@@ -1,23 +1,14 @@
 <template>
   <div id="app">
-    <div class="header">
-      <h1>Check out these Recipes</h1>
-      <button class="btn btn-outline-primary" @click="resetRecipeId()">Hide recipe</button>
-    </div>
-    <RecipesList v-on:selectRecipe="setRecipe"/>
-    <RecipeDetail v-bind:selected-recipe="selectedRecipe"/>
+    <router-view />
   </div>
 </template>
 
 <script>
-import RecipesList from "./components/RecipesList";
-import RecipeDetail from "@/components/RecipeDetail";
 
 export default {
   name: 'app',
   components: {
-    RecipesList,
-    RecipeDetail
   },
   data() {
     return {
@@ -35,12 +26,6 @@ export default {
       this.recipeId = null;
       this.selectedRecipe = {};
     },
-
-    loadRecipe (id) {
-      fetch(`http://localhost:3000/api/recipes/${id}`)
-      .then(response => response.json())
-      .then(data => this.selectedRecipe = data);
-    }
   }
 }
 </script>

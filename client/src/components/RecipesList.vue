@@ -23,7 +23,6 @@
         loading: false,
         recipes: null,
         error: null,
-        selectedRecipeId: null,
       }
     },
     created() {
@@ -31,8 +30,7 @@
     },
     methods: {
       setRecipe (id) {
-        this.$emit('selectRecipe', id);
-        this.selectedRecipeId = id;
+        this.$router.push({path: `/recipe/${id}`});
       },
 
       loadData: async function () {

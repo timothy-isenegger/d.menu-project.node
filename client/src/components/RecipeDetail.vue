@@ -1,6 +1,7 @@
 <template lang="html">
 
-  <section class="recipe-detail" :class="{active: recipeHasData}">
+  <section class="recipe-detail">
+    <router-link to="/">back</router-link>
     <h2>{{ selectedRecipe.title }}</h2>
     <p class="lead">{{ selectedRecipe.description }}</p>
     <div class="grid">
@@ -31,22 +32,24 @@
 
   export default  {
     name: 'recipe-detail',
-    props: [
-        'selectedRecipe'
-    ],
-    mounted () {
-
+    created() {
+      this.loadRecipe(this.$route.params.id);
+    },
+    watch: {
+      $route() {
+        this.loadRecipe(this.$route.params.id);
+      }
     },
     data () {
       return {
+        selectedRecipe: {},
       }
     },
     methods: {
-
-    },
-    computed: {
-      recipeHasData() {
-        return this.selectedRecipe.title !== undefined;
+      loadRecipe (id) {
+        fetch(`http://localhost:3000/api/recipes/${id}`)
+            .then(response => response.json())
+            .then(data => this.selectedRecipe = data);
       }
     }
 }
@@ -56,8 +59,6 @@
 
 <style scoped lang="scss">
   .recipe-detail {
-    border-top: 2px solid rgba(0,0,0,.2);
-    opacity: 0;
     padding: 15px;
     width: 100%;
 
@@ -86,6 +87,10 @@
       opacity: 1;
       transition: opacity 300ms ease-in-out;
     }
+  }
+
+  h2 {
+    border-top: 2px solid rgba(0,0,0,.2);
   }
 
   .ingredients-wrapper {
